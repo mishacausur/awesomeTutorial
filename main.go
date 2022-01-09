@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	var i uint
+	var i int
 	fmt.Scan(&i)
 	switch {
 	case i > 0:
