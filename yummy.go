@@ -1,27 +1,17 @@
 package main
 
-import (
-	"fmt"
-	"math"
-)
+import "fmt"
 
 func main() {
-	SqRoots()
+	IsPowerOfTwoRecursive(18)
 }
 
-func SqRoots() {
-	var a, b, c float64
-	fmt.Scanln(&a, &b, &c)
-
-	var result = b*b - 4*a*c
-	if result > 0 {
-		var firstRoot = (-b + math.Sqrt(result)) / (2 * a)
-		var secondRoot = (-b - math.Sqrt(result)) / (2 * a)
-		fmt.Println(math.Min(firstRoot, secondRoot), math.Max(firstRoot, secondRoot))
-	} else if result == 0 {
-		var root = -b / (2 * a)
-		fmt.Println(root)
+func IsPowerOfTwoRecursive(N int) {
+	if N == 1 {
+		fmt.Print("YES")
+	} else if N > 1 && N%2 == 0 {
+		IsPowerOfTwoRecursive(N / 2)
 	} else {
-		fmt.Println(0, 0)
+		fmt.Print("NO")
 	}
 }
