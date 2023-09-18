@@ -1,18 +1,27 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
-	var number int
-	var res = 0
-	fmt.Scanln(&number)
+	SqRoots()
+}
 
-	for i := 1; i <= number; i++ {
-		if (i%3 == 0) || (i%5 == 0) {
+func SqRoots() {
+	var a, b, c float64
+	fmt.Scanln(&a, &b, &c)
 
-			continue
-		}
-		res += i
+	var result = b*b - 4*a*c
+	if result > 0 {
+		var firstRoot = (-b + math.Sqrt(result)) / (2 * a)
+		var secondRoot = (-b - math.Sqrt(result)) / (2 * a)
+		fmt.Println(math.Min(firstRoot, secondRoot), math.Max(firstRoot, secondRoot))
+	} else if result == 0 {
+		var root = -b / (2 * a)
+		fmt.Println(root)
+	} else {
+		fmt.Println(0, 0)
 	}
-	fmt.Println(res)
 }
