@@ -1,8 +1,16 @@
 package main
 
-func SumDigitsRecursive(n int) int {
-	if n < 10 {
-		return n
+import "fmt"
+
+func main() {
+	ReverseSlice([]int{1, 2, 3, 4})
+}
+
+func ReverseSlice(slice []int) []int {
+	var reversed = make([]int, len(slice))
+	for i := 0; i < len(slice); i++ {
+		reversed[i] = slice[len(slice)-1-i]
 	}
-	return n%10 + SumDigitsRecursive(n/10)
+	fmt.Print(reversed)
+	return reversed
 }
