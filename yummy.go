@@ -1,13 +1,26 @@
 package main
 
+import "fmt"
+
 func main() {
-	ReverseSlice([]int{1, 2, 3, 4})
+	output, op := FindMinMaxInSlice([]int{1, 2, 3, 4})
+	fmt.Print(output, op)
 }
 
-func ReverseSlice(slice []int) []int {
-	var reversed = make([]int, len(slice))
-	for i := 0; i < len(slice); i++ {
-		reversed[i] = slice[len(slice)-1-i]
+func FindMinMaxInSlice(slice []int) (int, int) {
+	var min int
+	var max int
+
+	if len(slice) == 0 {
+		return 0, 0
 	}
-	return reversed
+	for i := 0; i < len(slice); i++ {
+		if min > slice[i] {
+			min = slice[i]
+		}
+		if max < slice[i] {
+			max = slice[i]
+		}
+	}
+	return min, max
 }
