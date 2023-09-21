@@ -3,24 +3,14 @@ package main
 import "fmt"
 
 func main() {
-	output, op := FindMinMaxInSlice([]int{1, 2, 3, 4})
-	fmt.Print(output, op)
+	output := SumOfSlice([]int{1, 2, 3, 4})
+	fmt.Print(output)
 }
 
-func FindMinMaxInSlice(slice []int) (int, int) {
-	var min int
-	var max int
-
-	if len(slice) == 0 {
-		return 0, 0
-	}
+func SumOfSlice(slice []int) int {
+	var result int
 	for i := 0; i < len(slice); i++ {
-		if min > slice[i] {
-			min = slice[i]
-		}
-		if max < slice[i] {
-			max = slice[i]
-		}
+		result += slice[i]
 	}
-	return min, max
+	return result
 }
