@@ -1,16 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
-	output := SumOfSlice([]int{1, 2, 3, 4})
+	output := SortSlice([]int{1, 4, 7, 2})
 	fmt.Print(output)
 }
 
-func SumOfSlice(slice []int) int {
-	var result int
-	for i := 0; i < len(slice); i++ {
-		result += slice[i]
-	}
-	return result
+func SortSlice(slice []int) []int {
+	sort.Sort(sort.IntSlice(slice))
+	return slice
 }
