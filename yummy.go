@@ -1,16 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"sort"
-)
+import "fmt"
 
 func main() {
-	output := SortSlice([]int{1, 4, 7, 2})
+	output := IntersectionOfSlices([]int{1, 2}, []int{1, 3, 4})
 	fmt.Print(output)
 }
 
-func SortSlice(slice []int) []int {
-	sort.Sort(sort.IntSlice(slice))
-	return slice
+func IntersectionOfSlices(slice1, slice2 []int) []int {
+	var result = make([]int, 0)
+	for i := 0; i < len(slice1); i++ {
+		for y := 0; y < len(slice2); y++ {
+			if slice1[i] == slice2[y] {
+				result = append(result, slice1[i])
+			}
+		}
+	}
+	return result
 }
