@@ -1,20 +1,30 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-func main() {
-	output := IntersectionOfSlices([]int{1, 2}, []int{1, 3, 4})
-	fmt.Print(output)
+func findStudentByID(id int, students map[int]string) (string, error) {
+	name, found := students[id]
+	if !found {
+		return "", fmt.Errorf("студент с ID %d не найден", id)
+	}
+
+	return name, nil
 }
 
-func IntersectionOfSlices(slice1, slice2 []int) []int {
-	var result = make([]int, 0)
-	for i := 0; i < len(slice1); i++ {
-		for y := 0; y < len(slice2); y++ {
-			if slice1[i] == slice2[y] {
-				result = append(result, slice1[i])
-			}
-		}
+func main() {
+	students := map[int]string{
+		1: "Иванов",
+		2: "Петров",
+		3: "Сидоров",
 	}
-	return result
+
+	id := 2
+	name, err := findStudentByID(id, students)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("Студент с ID %d: %s\n", id, name)
+	}
 }
