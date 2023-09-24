@@ -3,10 +3,10 @@ package main
 import "fmt"
 
 func main() {
-	output := ConcatenateStrings("evrb", "rvrv")
+	output := StringLength("evrb")
 	fmt.Print(output)
 }
 
-func ConcatenateStrings(str1, str2 string) string {
-	return str1 + " " + str2
+func StringLength(input string) int {
+	return len(input)
 }
