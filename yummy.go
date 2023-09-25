@@ -1,21 +1,11 @@
 package main
 
-import "fmt"
+func SwapKeysAndValues(m map[string]string) map[string]string {
+	var result = make(map[string]string)
 
-func main() {
-	output := FindMaxKey(map[int]int{10: 37, 3: 19})
-	fmt.Print(output)
-}
+	for key := range m {
+		result[m[key]] = key
+	}
 
-func FindMaxKey(m map[int]int) int {
-	var max int
-	for key := range m {
-		max = key
-	}
-	for key := range m {
-		if key > max {
-			max = key
-		}
-	}
-	return max
+	return result
 }
