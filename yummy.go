@@ -1,4 +1,4 @@
-package main
+package students
 
 func SwapKeysAndValues(m map[string]string) map[string]string {
 	var result = make(map[string]string)

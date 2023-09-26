@@ -1,43 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
-	var workArray = [10]uint8{}
-	var i uint8
-	var index = 0
+	var bloom, stem int
+	fmt.Scanln(&bloom)
+	fmt.Scanln(&stem)
+	draw(bloom, stem)
+}
 
-	for fmt.Scan(&i); index <= len(workArray)-1; fmt.Scan(&i) {
-		workArray[index] = i
-		fmt.Println(workArray)
-		index++
+func draw(bloom, stem int) {
+
+	for i := bloom; i > 0; i-- {
+		fmt.Println(strings.Repeat("*", i))
 	}
 
-	//var indexed = [6]uint{}
-	var indexes = [6]uint8{}
-	var num uint8
-	var index1 = 0
-	for fmt.Scan(&num); index1 <= len(indexes)-1; fmt.Scan(&num) {
-		fmt.Println(indexes)
-		indexes[index1] = num
-		index1++
-		fmt.Println(indexes)
+	for i := stem - 1; i > 0; i-- {
+		fmt.Println("*")
 	}
-
-	var a, b, c, d, e, f uint8
-	a = workArray[indexes[0]]
-	b = workArray[indexes[1]]
-	c = workArray[indexes[2]]
-	d = workArray[indexes[3]]
-	e = workArray[indexes[4]]
-	f = workArray[indexes[5]]
-
-	workArray[indexes[0]] = b
-	workArray[indexes[1]] = a
-	workArray[indexes[2]] = d
-	workArray[indexes[3]] = c
-	workArray[indexes[4]] = f
-	workArray[indexes[5]] = e
-
-	fmt.Println(workArray)
 }
