@@ -2,23 +2,28 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"math/big"
 )
 
 func main() {
-	var bloom, stem int
-	fmt.Scanln(&bloom)
-	fmt.Scanln(&stem)
-	draw(bloom, stem)
+	var end int
+	fmt.Scanln(&end)
+	count(end)
 }
 
-func draw(bloom, stem int) {
+func count(end int) {
 
-	for i := bloom; i > 0; i-- {
-		fmt.Println(strings.Repeat("*", i))
+	for i := 3; i < end; i += 5 {
+		if isNumberPrime(int64(i)) {
+			fmt.Print("хоп")
+		} else {
+			fmt.Print(i)
+		}
+		fmt.Print(" ")
 	}
+}
 
-	for i := stem - 1; i > 0; i-- {
-		fmt.Println("*")
-	}
+func isNumberPrime(number int64) bool {
+	result := big.NewInt(number)
+	return result.ProbablyPrime(20)
 }
