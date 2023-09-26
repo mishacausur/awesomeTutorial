@@ -1,29 +1,41 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"math/big"
+	"os"
 )
 
 func main() {
-	var end int
-	fmt.Scanln(&end)
-	count(end)
-}
+	var a, b rune
+	var text string
+	fmt.Scanf("%c\n", &a)
+	fmt.Scanf("%c\n", &b)
+	scanner := bufio.NewScanner(os.Stdin)
+	if scanner.Scan() {
+		text = scanner.Text()
+	}
 
-func count(end int) {
+	x, y := count(a, b, text)
 
-	for i := 3; i < end; i += 5 {
-		if isNumberPrime(int64(i)) {
-			fmt.Print("хоп")
-		} else {
-			fmt.Print(i)
-		}
-		fmt.Print(" ")
+	if x >= y {
+		fmt.Printf("%c %d\n", a, x)
+		fmt.Printf("%c %d\n", b, y)
+	} else {
+		fmt.Printf("%c %d\n", b, y)
+		fmt.Printf("%c %d\n", a, x)
 	}
 }
 
-func isNumberPrime(number int64) bool {
-	result := big.NewInt(number)
-	return result.ProbablyPrime(20)
+func count(a, b rune, text string) (int, int) {
+	var x, y int
+	for _, char := range text {
+		if char == a {
+			x++
+		} else if char == b {
+			y++
+		}
+	}
+
+	return x, y
 }
