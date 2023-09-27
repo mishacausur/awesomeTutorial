@@ -1,37 +1,23 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"strings"
 )
 
+type Person struct {
+	Name         string `json:"name"`
+	Age          int    `json:"age"`
+	Gender       string `json:"-"`
+	privateNotes string
+}
+
 func main() {
-
-	var count int
-	fmt.Scan(&count)
-
-	people := make([]string, count)
-
-	for i := 0; i < count; i++ {
-		fmt.Scan(&people[i])
+	jsonStr := `{"name": "John", "age": 30, "Gender": "male"}`
+	var person Person
+	err := json.Unmarshal([]byte(jsonStr), &person)
+	if err != nil {
+		panic(err)
 	}
-
-	for {
-		var prefix string
-		if _, error := fmt.Scan(&prefix); error != nil {
-			break
-		}
-
-		result := false
-		for _, name := range people {
-			if strings.HasPrefix(name, prefix) {
-				fmt.Println(name)
-				result = true
-				break
-			}
-		}
-		if !result {
-			fmt.Println("Не найдено")
-		}
-	}
+	fmt.Println(person)
 }
