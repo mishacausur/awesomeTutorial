@@ -3,21 +3,32 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 )
 
 type Person struct {
-	Name         string `json:"name"`
-	Age          int    `json:"age"`
-	Gender       string `json:"-"`
-	privateNotes string
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 func main() {
-	jsonStr := `{"name": "John", "age": 30, "Gender": "male"}`
-	var person Person
-	err := json.Unmarshal([]byte(jsonStr), &person)
+	file, err := os.Open("data.json")
 	if err != nil {
-		panic(err)
+		fmt.Println("Ошибка при открытии файла:", err)
+		return
 	}
-	fmt.Println(person)
+	defer file.Close()
+
+	byteValue, _ := io.ReadAll(file)
+
+	var person Person
+	err = json.Unmarshal(byteValue, &person)
+	if err != nil {
+		fmt.Println("Ошибка при декодировании JSON:", err)
+		return
+	}
+
+	fmt.Println("Имя:", person.Name)
+	fmt.Println("Email:", person.Email)
 }
