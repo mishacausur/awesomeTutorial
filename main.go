@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type Person struct {
@@ -11,10 +12,19 @@ type Person struct {
 }
 
 func main() {
-	person := Person{Name: "John", Age: 30}
-	jsonBytes, err := json.Marshal(person)
+	jsonStr := `{"name": "John", "age": 30}`
+
+	reader := strings.NewReader(jsonStr)
+
+	decoder := json.NewDecoder(reader)
+
+	var person Person
+
+	err := decoder.Decode(&person)
 	if err != nil {
-		panic(err)
+		fmt.Println("Ошибка чтения JSON:", err)
+		return
 	}
-	fmt.Println(string(jsonBytes))
+
+	fmt.Printf("Имя: %s, Возраст: %d\n", person.Name, person.Age)
 }
