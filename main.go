@@ -12,6 +12,25 @@ type Student struct {
 	Grade int    `json:"grade"`
 }
 
+type NullString struct {
+	String string
+	Valid  bool
+}
+
+func (ns *NullString) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		ns.Valid = false
+		return nil
+	}
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		return err
+	}
+	ns.String = str
+	ns.Valid = true
+	return nil
+}
+
 func main() {
 	students := []Student{
 		{Name: "Alice", Age: 12, Grade: 7},
