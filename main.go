@@ -7,46 +7,71 @@ import (
 )
 
 type Student struct {
+	Class string `json:"class"`
 	Name  string `json:"name"`
-	Grade int    `json:"grade"`
+}
+
+package main
+
+import (
+"encoding/json"
+)
+
+type Student struct {
+	Class string `json:"class"`
+	Name  string `json:"name"`
+}
+
+func mergeJSONData(jsonDataList ...[]byte) ([]byte, error) {
+	mergedData := []Student{}
+	for _, jsonData := range jsonDataList {
+		data := []Student{}
+		err := json.Unmarshal(jsonData, &data)
+		if err != nil {
+			return nil, err
+		}
+		mergedData = append(mergedData, data...)
+	}
+	mergedJSON, err := json.Marshal(mergedData)
+	if err != nil {
+		return nil, err
+	}
+	return mergedJSON, nil
 }
 
 func main() {
-	inputJSON := []byte(`[
+	inputJSON1 := []byte(`[
 			{
 				"name": "Oleg",
-				"grade": 12
+				"class": "9B"
+			},
+			{
+				"name": "Ivan",
+				"class": "9A"
 			}
 		]`)
 
-	expectedJSON := []byte(`[{"name":"Oleg","grade":13}]`)
+	inputJSON2 := []byte(`[
+			{
+				"name": "Maria",
+				"class": "9B"
+			},
+			{
+				"name": "John",
+				"class": "9A"
+			}
+		]`)
 
-	updatedJSON, err := modifyJSON(inputJSON)
+	expectedJSON := []byte(`[{"class":"9B","name":"Oleg"},{"class":"9A","name":"Ivan"},{"class":"9B","name":"Maria"},{"class":"9A","name":"John"}]`)
+
+	mergedJSON, err := mergeJSONData(inputJSON1, inputJSON2)
 	if err != nil {
-		fmt.Println("Error while modifying JSON: %v", err)
+		fmt.Println("Error while merging JSON data: %v", err)
 	}
 
-	if !bytes.Equal(updatedJSON, expectedJSON) {
-		fmt.Println("Expected updated JSON to be %s, but got %s", expectedJSON, updatedJSON)
-	}
-}
-
-func modifyJSON(jsonData []byte) ([]byte, error) {
-	students := []Student{}
-	err := json.Unmarshal(jsonData, &students)
-	if err != nil {
-		fmt.Println("Ошибка при чтении JSON-данных:", err)
-		return jsonData, err
-	}
-	for i := range students {
-		students[i].Grade += 1
+	if !bytes.Equal(mergedJSON, expectedJSON) {
+		fmt.Println("Expected merged JSON data to be %s, but got %s", expectedJSON, mergedJSON)
 	}
 
-	updatedJSON, err := json.Marshal(students)
-	if err != nil {
-		fmt.Println("Ошибка при записи JSON-данных:", err)
-		return jsonData, err
-	}
-
-	return updatedJSON, nil
+	fmt.Println(string(mergedJSON))
 }
