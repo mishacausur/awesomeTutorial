@@ -8,46 +8,45 @@ import (
 
 type Student struct {
 	Name  string `json:"name"`
-	Age   int    `json:"age"`
 	Grade int    `json:"grade"`
 }
 
-type NullString struct {
-	String string
-	Valid  bool
-}
-
-func (ns *NullString) UnmarshalJSON(data []byte) error {
-	if string(data) == "null" {
-		ns.Valid = false
-		return nil
-	}
-	var str string
-	if err := json.Unmarshal(data, &str); err != nil {
-		return err
-	}
-	ns.String = str
-	ns.Valid = true
-	return nil
-}
-
 func main() {
-	students := []Student{
-		{Name: "Alice", Age: 12, Grade: 7},
-		{Name: "Bob", Age: 13, Grade: 8},
-		{Name: "Charlie", Age: 14, Grade: 9},
+	inputJSON := []byte(`[
+			{
+				"name": "Oleg",
+				"grade": 12
+			}
+		]`)
+
+	expectedJSON := []byte(`[{"name":"Oleg","grade":13}]`)
+
+	updatedJSON, err := modifyJSON(inputJSON)
+	if err != nil {
+		fmt.Println("Error while modifying JSON: %v", err)
 	}
 
-	var buf bytes.Buffer
+	if !bytes.Equal(updatedJSON, expectedJSON) {
+		fmt.Println("Expected updated JSON to be %s, but got %s", expectedJSON, updatedJSON)
+	}
+}
 
-	encoder := json.NewEncoder(&buf)
+func modifyJSON(jsonData []byte) ([]byte, error) {
+	students := []Student{}
+	err := json.Unmarshal(jsonData, &students)
+	if err != nil {
+		fmt.Println("Ошибка при чтении JSON-данных:", err)
+		return jsonData, err
+	}
+	for i := range students {
+		students[i].Grade += 1
+	}
 
-	err := encoder.Encode(students)
+	updatedJSON, err := json.Marshal(students)
 	if err != nil {
 		fmt.Println("Ошибка при записи JSON-данных:", err)
-		return
+		return jsonData, err
 	}
 
-	fmt.Println("JSON-данные о студентах:")
-	fmt.Println(buf.String())
+	return updatedJSON, nil
 }
