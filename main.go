@@ -1,77 +1,71 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
-type Student struct {
-	Class string `json:"class"`
-	Name  string `json:"name"`
-}
+func splitJSONByClass(jsonData []byte) (map[string][]byte, error) {
+	var data []map[string]interface{}
 
-package main
-
-import (
-"encoding/json"
-)
-
-type Student struct {
-	Class string `json:"class"`
-	Name  string `json:"name"`
-}
-
-func mergeJSONData(jsonDataList ...[]byte) ([]byte, error) {
-	mergedData := []Student{}
-	for _, jsonData := range jsonDataList {
-		data := []Student{}
-		err := json.Unmarshal(jsonData, &data)
-		if err != nil {
-			return nil, err
-		}
-		mergedData = append(mergedData, data...)
-	}
-	mergedJSON, err := json.Marshal(mergedData)
+	err := json.Unmarshal(jsonData, &data)
 	if err != nil {
 		return nil, err
 	}
-	return mergedJSON, nil
+
+	result := make(map[string][]byte)
+
+	for _, obj := range data {
+		class, ok := obj["class"].(string)
+		if !ok {
+			return nil, errors.New("decoding error")
+		}
+
+		if existingData, exists := result[class]; exists {
+
+			var existingObjects []map[string]interface{}
+			err := json.Unmarshal(existingData, &existingObjects)
+			if err != nil {
+				return nil, err
+			}
+			existingObjects = append(existingObjects, obj)
+			updatedData, err := json.Marshal(existingObjects)
+			if err != nil {
+				return nil, err
+			}
+			result[class] = updatedData
+		} else {
+
+			initialData := []map[string]interface{}{obj}
+			initialDataJSON, err := json.Marshal(initialData)
+			if err != nil {
+				return nil, err
+			}
+			result[class] = initialDataJSON
+		}
+	}
+
+	return result, nil
 }
 
 func main() {
-	inputJSON1 := []byte(`[
-			{
-				"name": "Oleg",
-				"class": "9B"
-			},
-			{
-				"name": "Ivan",
-				"class": "9A"
-			}
-		]`)
+	// Пример использования
+	jsonData := []byte(`[
+		{"class": "9A", "name": "Ivan"},
+		{"class": "9A", "name": "John"},
+		{"class": "9B", "name": "Oleg"},
+		{"class": "9B", "name": "Maria"}
+	]`)
 
-	inputJSON2 := []byte(`[
-			{
-				"name": "Maria",
-				"class": "9B"
-			},
-			{
-				"name": "John",
-				"class": "9A"
-			}
-		]`)
-
-	expectedJSON := []byte(`[{"class":"9B","name":"Oleg"},{"class":"9A","name":"Ivan"},{"class":"9B","name":"Maria"},{"class":"9A","name":"John"}]`)
-
-	mergedJSON, err := mergeJSONData(inputJSON1, inputJSON2)
+	result, err := splitJSONByClass(jsonData)
 	if err != nil {
-		fmt.Println("Error while merging JSON data: %v", err)
+		fmt.Println("Ошибка:", err)
+		return
 	}
 
-	if !bytes.Equal(mergedJSON, expectedJSON) {
-		fmt.Println("Expected merged JSON data to be %s, but got %s", expectedJSON, mergedJSON)
+	// Выводим результат
+	for class, data := range result {
+		fmt.Printf("Класс: %s\nДанные: %s\n", class, data)
 	}
-
-	fmt.Println(string(mergedJSON))
 }
